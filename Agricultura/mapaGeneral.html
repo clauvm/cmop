@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>CMOP</title>
+		<title>Left Sidebar - Arcana by HTML5 UP</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -21,12 +21,12 @@
 				<div id="header">
 
 					<!-- Logo -->
-						<h1><a href="index.html" id="logo">CMOP</a></h1>
+						<h1><a href="index.html" id="logo">Mapa General</h1>
 
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-								<li class="current"><a href="index.html">Inicio</a></li>
+								<li><a href="index.html">Inicio</a></li>
 								<li>
 									<a href="#">Drone</a>
 									<ul>
@@ -34,7 +34,7 @@
 										<li><a href="#">Drone 2</a></li>
 									</ul>
 								</li>
-								<li><a href="left-sidebar.html">Mapas</a>
+								<li class="current"><a href="left-sidebar.html">Mapas</a>
 									<ul>
 										<li><a href="mapaGeneral.html">Mapa General</a></li>
 										<li><a href="#">Zonas</a>
@@ -57,20 +57,64 @@
 
 				</div>
 
-			<!-- Banner -->
-				<section id="banner">
-					<header>
-						<h2>Developed by CeLAB using VIZIX and MCON </h2>
-					</header>
+			<!-- Main -->
+				<section class="wrapper style1">
+					<div class="container">
+						<div id="mapa"></div>
+						
+					</div>
 				</section>
 
-					<!-- Scripts -->
+			<!-- Footer -->
+				<div id="footer">
+					<div class="container">
+						
+
+				</div>
+
+		</div>
+
+		<!-- Scripts -->
+
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/jquery.dropotron.min.js"></script>
 			<script src="assets/js/skel.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="assets/js/main.js"></script>
+			<script src="http://www.hivemq.com/demos/websocket-client/js/mqttws31.js" type="text/javascript"></script>
+			<script type="text/javascript">
+        function getMapa () {
+
+        jQuery.ajax({
+         type: "GET",
+         url: "http://hackiot.com:8080/riot-core-services/api/things",
+         contentType: "application/json; charset=utf-8",
+         headers: { "api_key": "root" },
+         dataType: "json",
+         async: true,
+         success: function (data, textStatus) {
+            //alert(exito);
+             console.log(data);
+            $("#mapa").html(data["results"][0].serialNumber);
+            //console.log(data["results"][0].serialNumber);
+            // document.write(data[0]["nombre"]);
+            for (var i = 3; i < data["results"].length; i++) {
+             	$("#mapa").append(data["results"][i].location);
+             	$("#mapa").append("<br>");
+
+            };
+         },
+
+         error: function (textStatus, errorThrown) {
+           // alert("No exito");
+            console.log("No lo logramos :(");
+                //document.write(noExito);
+         }
+    });
+    }
+    getMapa();
+    </script>
 
 	</body>
 </html>
