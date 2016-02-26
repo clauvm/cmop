@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Left Sidebar - Arcana by HTML5 UP</title>
+		<title>Zonas Prueba</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -86,9 +86,13 @@
 			<script src="assets/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="assets/js/main.js"></script>
-			<script type="text/javascript">
 			
-             function getMapa () {
+            <script>
+             var map; //Variable del mapa
+             var marker, i;
+             var geoJson; // Variable de geoJson
+             function initMap() { //Funcion para inicializar el mapa
+             //Sacamos los datos de geoJson
              jQuery.ajax({
              type: "GET",
              url: "http://hackiot.com:8080/riot-core-services/api/zone/geojson",
@@ -98,7 +102,7 @@
              async: true,
              success: function (data, textStatus) {
              	
-             console.log(data);
+              map.data.addGeoJson(data); //Cargamos el mapa con los datos geoJson
             },
              error: function (textStatus, errorThrown) {
              // alert("No exito");
@@ -106,17 +110,46 @@
                 //document.write(noExito);
             }
             });
-            }
-            getMapa();
-            </script>
-            <script>
-             var map;
-             function initMap() {
+
               map = new google.maps.Map(document.getElementById('map'), {
               center: {lat: -16.541070, lng: -68.088338},
               zoom: 21
               });
-              map.data.loadGeoJson('https://storage.googleapis.com/maps-devrel/google.json');
+             /////////////////////////////////////////////////////////////////////////////////////////
+             // Sacamos la locacion de los markers y los ponemos en el mapa
+             jQuery.ajax({
+             type: "GET",
+             url: "http://hackiot.com:8080/riot-core-services/api/things",
+             contentType: "application/json; charset=utf-8",
+             headers: { "api_key": "root" },
+             dataType: "json",
+             async: true,
+             success: function (data, textStatus) {
+             	for (i = 3; i < data["results"].length; i++) {  
+             		Var dividir = data["results"][i].location.split(";");
+             		var latitud = dividir[1];
+             		var longitud = dividir[0];
+                    marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(latitud, longitud),
+                	map: map
+                	});
+                	google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                		return function() {
+                		infowindow.setContent(data["results"][i].serialNumber);
+                		infowindow.open(map, marker);
+                		}
+                	})(marker, i));
+                }
+             	
+              
+            },
+             error: function (textStatus, errorThrown) {
+             // alert("No exito");
+             console.log("No lo logramos :(");
+                //document.write(noExito);
+            }
+            });
+             
             }
            </script>
            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmwel62ehNVep_gnmvGQBGKX0oyj_K_Wk&callback=initMap"
