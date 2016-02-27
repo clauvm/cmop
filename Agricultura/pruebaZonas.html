@@ -112,7 +112,7 @@
             });
 
               map = new google.maps.Map(document.getElementById('map'), {
-              center: {lat: -16.541070, lng: -68.088338},
+              center: {lat: -16.541065, lng: -68.088577},
               zoom: 21
               });
              /////////////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +126,7 @@
              async: true,
              success: function (data, textStatus) {
              	for (i = 3; i < data["results"].length; i++) {  
-             		Var dividir = data["results"][i].location.split(";");
+             		var dividir = data["results"][i].location.split(";");
              		var latitud = dividir[1];
              		var longitud = dividir[0];
                     marker = new google.maps.Marker({
